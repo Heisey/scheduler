@@ -1,89 +1,40 @@
-import React, { useState } from "react";
+import React from 'react'
 
 import Appointment from 'components/Appointment/Appointment';
 import DayList from "components/DayList/DayList";
 
+import useApplicationData from 'hooks/useApplicationData'
+
+import { getAppointmentsForDay, getInterview, getInterviewersForDay } from '../helpers/selectors';
+
 import "components/Application.scss";
 
-const appointments = [
-  {
-    id: 1,
-    time: "12pm",
-  },
-  {
-    id: 2,
-    time: "1pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 1,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      }
-    }
-  },
-  {
-    id: 3,
-    time: "2pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 1,
-        name: "Archie Boy",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      }
-    }
-  },
-  {
-    id: 4,
-    time: "3pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 1,
-        name: "Azaleah Girl",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      }
-    }
-  },
-  {
-    id: 5,
-    time: "4pm",
-    interview: {
-      student: "Lydia Miller-Jones",
-      interviewer: {
-        id: 1,
-        name: "Elon Musk",
-        avatar: "https://i.imgur.com/LpaY82x.png",
-      }
-    }
-  },
-];
+export default function Application() {
+  const {
+    state,
+    handleSetDay,
+    bookInterview,
+    cancelInterview,
+    updateSpots
+  } = useApplicationData()
 
-export default function Application(props) {
-  const [ day, setDay ] = useState('Monday')
 
-  const days = [
-    {
-      id: 1,
-      name: "Monday",
-      spots: 2,
-    },
-    {
-      id: 2,
-      name: "Tuesday",
-      spots: 5,
-    },
-    {
-      id: 3,
-      name: "Wednesday",
-      spots: 0,
-    },
-  ];
+  const generateAppointments = (appointment) => {
+    const interviewData = getInterview(state, appointment.interview)
+    return (
+      <Appointment
+        key={appointment.id}
+        id={appointment.id}
+        time={appointment.time}
+        interview={interviewData}
+        interviewers={getInterviewersForDay(state, state.day)}
+        bookInterview={bookInterview}
+        cancelInterview={cancelInterview}
+        updateSpots={updateSpots}
+      />
+    )
+  }
 
-  const handleSetDay = (day) => setDay(day)
-  
-  console.log(appointments)
   return (
     <main className="layout">
       <section className="sidebar">
@@ -95,8 +46,8 @@ export default function Application(props) {
       <hr className="sidebar__separator sidebar--centered" />
       <nav className="sidebar__menu">
         <DayList
-            days={days} 
-            day={day}
+            days={state.days} 
+            day={state.day}
             setDay={handleSetDay}
         />
       </nav>
@@ -107,12 +58,8 @@ export default function Application(props) {
       />
       </section>
       <section className="schedule">
-        {appointments.map(appointment => (
-          <Appointment
-            key={appointment.id}
-            time={appointment.time}
-            interview={appointment.interview}
-          />
+        {getAppointmentsForDay(state, state.day).map(appointment => (
+          generateAppointments(appointment)
         ))}
         <Appointment key="last" time="5pm" />
       </section>

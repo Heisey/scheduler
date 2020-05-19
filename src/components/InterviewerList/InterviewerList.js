@@ -7,10 +7,6 @@ import 'components/InterviewerList/InterviewerList.scss';
 export default function InterviewerList(props) {
   const { interviewer, interviewers, setInterviewer } = props
 
-  const handleSetInterviewer = (e) => {
-    setInterviewer(interviewer)
-  }
-
   return (
     <section className="interviewers">
       <h4 className="interviewers__header text--light">Interviewer</h4>
@@ -22,7 +18,7 @@ export default function InterviewerList(props) {
             id={cur.id}
             name={cur.name}
             selected={interviewer === cur.id}
-            setInterviewer={handleSetInterviewer}
+            setInterviewer={setInterviewer}
           />
         ))}
         

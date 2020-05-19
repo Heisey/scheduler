@@ -9,13 +9,16 @@ export default function InterviewerListItem(props) {
     "interviewers__item--selected": selected
   })
 
+  const handleSetInterviewer = (e) => {
+    setInterviewer(e.target.id)
+  }
   return (
     <li
-      id={id}
-      onClick={setInterviewer}
+      onClick={handleSetInterviewer}
       className={InterviewerListItemStyles}
     >
       <img
+        id={id}
         className="interviewers__item-image"
         src={avatar}
         alt={name}
