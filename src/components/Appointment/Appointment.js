@@ -29,6 +29,7 @@ export default function Appointment(props) {
   const EMPTY = 'EMPTY';
   const ERROR_DELETE = 'ERROR_DELETE';
   const ERROR_SAVE = 'ERROR_SAVE';
+  const ERROR_SELECT = 'ERROR_SELECT';
   const SAVE = 'SAVE';
   const SHOW = 'SHOW';
   const CONFIRM = 'CONFIRM';
@@ -46,12 +47,16 @@ export default function Appointment(props) {
       await cancelInterview(id)
       
       await updateSpots(true)
-      
+
       transition(EMPTY)
     } catch {
       transition(ERROR_DELETE)
     }
       
+  }
+
+  const handleSelectError = () => {
+    transition(ERROR_SELECT)
   }
 
   const onEdit = () => {
@@ -108,11 +113,18 @@ export default function Appointment(props) {
             onClose={onCancel}
           />
         )}
+        {mode === ERROR_SELECT && (
+          <Error
+            message="student name cannot be blank"
+            onClose={onCancel}
+          />
+        )}
         {mode === CREATE && (
           <Form 
             interviewers={interviewers}
             onCancel={onCancel}
             onSave={save}
+            onSelectError={handleSelectError}
           />
         )}
         {mode === EDIT && (
