@@ -80,5 +80,24 @@ export default {
         data: fixtures.interviewers
       })
     }
+  }),
+
+  put: jest.fn(url => {
+    if (url === "http://192.168.1.67:8001/api/days") {
+
+      return Promise.resolve({
+        status: 204,
+        statusText: "No Content"
+      });
+    }
+  }),
+  delete: jest.fn(url => {
+    if (url === "http://192.168.1.67:8001/api/days") {
+
+      return Promise.resolve({
+        status: 201,
+        statusText: "No Content"
+      })
+    }
   })
 }
