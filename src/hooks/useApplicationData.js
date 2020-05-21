@@ -16,9 +16,9 @@ export default function useApplicationData() {
   useEffect(() => {
     async function setData() {
       try {
-        const daysData = await axios.get('http://192.168.1.67:8001/api/days')
-        const appointmentsData = await axios.get('http://192.168.1.67:8001/api/appointments')
-        const interviewerData = await axios.get('http://192.168.1.67:8001/api/interviewers')
+        const daysData = await axios.get('/api/days')
+        const appointmentsData = await axios.get('/api/appointments')
+        const interviewerData = await axios.get('/api/interviewers')
 
         setState(prev => ({
           ...prev, 

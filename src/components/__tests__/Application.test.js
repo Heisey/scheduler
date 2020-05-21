@@ -79,5 +79,76 @@ describe("Application", () => {
 
     console.log(prettyDOM(container))
   })
+
+  it("loads data, update user and doesn't affect spots remaining", async () => {
+    
+    const { container } = render(<Application />);
+
+    await waitForElement(() => getByText(container, "Archie Cohen"))
+
+    const appointments = getAllByTestId(container, 'appointment')
+    const appointment = appointments[1];
+
+    fireEvent.click(getByAltText(appointment, 'Edit'))
+
+    fireEvent.change(getByPlaceholderText(appointment, "Enter Student Name"), {
+      target: { value: "Puppy Archie"}
+    })
+
+    fireEvent.click(getByAltText(appointment, 'Tori Malcolm'))
+
+    fireEvent.click(getByText(appointment, 'Save'))
+    expect(getByText(appointment, 'Saving')).toBeInTheDocument()
+
+    await waitForElement(() => getByText(appointment, 'Puppy Archie'))
+
+    const day = getAllByTestId(container, 'day').find(d => queryByText(d, 'Monday'))
+
+    expect(getByText(day, '1 spot remaining')).toBeInTheDocument()
+  })
+
+  it("loads data, shows error when saving", async () => {
+    axios.put.mockRejectedValueOnce()
+    
+    const { container } = render(<Application />);
+
+    await (waitForElement(() => getByText(container, "Archie Cohen")))
+
+    const appointments = getAllByTestId(container, 'appointment')
+    const appointment = appointments[0];
+
+    fireEvent.click(getByAltText(appointment, 'Add'))
+
+    fireEvent.change(getByPlaceholderText(appointment, "Enter Student Name"), {
+      target: { value: "Puppy Archie"}
+    })
+
+    fireEvent.click(getByAltText(appointment, 'Tori Malcolm'))
+    
+    fireEvent.click(getByText(appointment, 'Save'))
+
+    expect(getByText(appointment, 'Saving')).toBeInTheDocument()
+
+    await waitForElement(() => getByText(appointment, 'Error'))
+  })
+
+  it("loads data, shows error when deleting", async () => {
+    axios.delete.mockRejectedValueOnce()
+    
+    const { container } = render(<Application />);
+
+    await waitForElement(() => getByText(container, "Archie Cohen"))
+
+    const appointments = getAllByTestId(container, 'appointment')
+    const appointment = appointments[1];
+    
+    fireEvent.click(getByAltText(appointment, 'Delete'))
+
+    fireEvent.click(getByText(appointment, 'Confirm'))
+
+    expect(getByText(appointment, 'Deleting')).toBeInTheDocument()
+
+    await waitForElement(() => getByText(appointment, 'Error'))
+  })
 })
 

@@ -69,6 +69,7 @@ export default function Appointment(props) {
 
   const save = async (name, interviewer) => {
     try {
+      const fromEdit = mode === EDIT
       transition(SAVE)
     
       const interview = {
@@ -77,8 +78,12 @@ export default function Appointment(props) {
       }
       
       await bookInterview(id, interview)
-      await updateSpots()
+
       transition(SHOW)
+
+      if (!fromEdit) {
+        await updateSpots()
+      }
     } catch {
       transition(ERROR_SAVE, true)
     }
