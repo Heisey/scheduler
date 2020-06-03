@@ -1,6 +1,6 @@
 describe('appointments', () => {
   it('should book an interview', () => {
-    cy.request("GET", "http://192.168.1.67:8001/api/days")
+    cy.request("GET", "locahost/api/days")
     cy.visit('/');
 
     cy.get("[alt=Add]")

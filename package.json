@@ -2,7 +2,7 @@
   "name": "scheduler",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://192.168.1.67:8001",
+  "proxy": "http://locahost:8001",
   "dependencies": {
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
